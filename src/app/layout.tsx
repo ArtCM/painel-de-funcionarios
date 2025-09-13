@@ -1,62 +1,64 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import "./globals.css";
+import type { Metadata } from 'next';
+import localFont from 'next/font/local';
+import './globals.css';
+import Header from '@/components/Header/header';
+import Footer from '@/components/Footer/footer';
 
 const inter = localFont({
   src: [
     {
-      path: "../../public/fonts/Inter/Inter_18pt-Thin.ttf",
-      weight: "100",
-      style: "normal",
+      path: '../../public/fonts/Inter/Inter_18pt-Thin.ttf',
+      weight: '100',
+      style: 'normal',
     },
     {
-      path: "../../public/fonts/Inter/Inter_18pt-ExtraLight.ttf",
-      weight: "200",
-      style: "normal",
+      path: '../../public/fonts/Inter/Inter_18pt-ExtraLight.ttf',
+      weight: '200',
+      style: 'normal',
     },
     {
-      path: "../../public/fonts/Inter/Inter_18pt-Light.ttf",
-      weight: "300",
-      style: "normal",
+      path: '../../public/fonts/Inter/Inter_18pt-Light.ttf',
+      weight: '300',
+      style: 'normal',
     },
     {
-      path: "../../public/fonts/Inter/Inter_18pt-Regular.ttf",
-      weight: "400",
-      style: "normal",
+      path: '../../public/fonts/Inter/Inter_18pt-Regular.ttf',
+      weight: '400',
+      style: 'normal',
     },
     {
-      path: "../../public/fonts/Inter/Inter_18pt-Medium.ttf",
-      weight: "500",
-      style: "normal",
+      path: '../../public/fonts/Inter/Inter_18pt-Medium.ttf',
+      weight: '500',
+      style: 'normal',
     },
     {
-      path: "../../public/fonts/Inter/Inter_18pt-SemiBold.ttf",
-      weight: "600",
-      style: "normal",
+      path: '../../public/fonts/Inter/Inter_18pt-SemiBold.ttf',
+      weight: '600',
+      style: 'normal',
     },
     {
-      path: "../../public/fonts/Inter/Inter_18pt-Bold.ttf",
-      weight: "700",
-      style: "normal",
+      path: '../../public/fonts/Inter/Inter_18pt-Bold.ttf',
+      weight: '700',
+      style: 'normal',
     },
     {
-      path: "../../public/fonts/Inter/Inter_18pt-ExtraBold.ttf",
-      weight: "800",
-      style: "normal",
+      path: '../../public/fonts/Inter/Inter_18pt-ExtraBold.ttf',
+      weight: '800',
+      style: 'normal',
     },
     {
-      path: "../../public/fonts/Inter/Inter_18pt-Black.ttf",
-      weight: "900",
-      style: "normal",
+      path: '../../public/fonts/Inter/Inter_18pt-Black.ttf',
+      weight: '900',
+      style: 'normal',
     },
   ],
-  variable: "--font-inter",
-  display: "swap",
+  variable: '--font-inter',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: "Teste Doqr",
-  description: "Sistema de controle de funcionários",
+  title: 'Teste Doqr',
+  description: 'Sistema de controle de funcionários',
 };
 
 export default function RootLayout({
@@ -66,8 +68,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${inter.variable} font-inter antialiased`}>
-        {children}
+      <body className={`${inter.variable} font-inter antialiased text-text`}>
+        <div className="min-h-screen bg-background flex flex-col">
+          <Header />
+          {children}
+          <Footer />
+        </div>
       </body>
     </html>
   );
