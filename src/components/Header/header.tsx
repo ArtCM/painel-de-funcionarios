@@ -3,8 +3,8 @@ import Image from 'next/image';
 
 export default function Header() {
   return (
-    <header className="flex justify-center border-b-2 p-3">
-      <div className="container flex justify-between items-center">
+    <header className="flex justify-center border-b-2 py-3 mb-5">
+      <div className="container mx-auto px-6 flex justify-between items-center">
         <Image
           src="/logo.png"
           alt="Teste Doqr logo"
