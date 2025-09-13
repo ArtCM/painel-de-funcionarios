@@ -1,3 +1,5 @@
+'use client';
+
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -12,41 +14,12 @@ import {
 import { Edit, Trash, Plus } from 'lucide-react';
 import { formatters } from '@/lib/masks';
 import Link from 'next/link';
-
-const employees = [
-  {
-    id: 1,
-    name: 'John Doe',
-    email: 'joedoe@doqr.com.br',
-    cpf: '11122233344',
-    phone: '1499123-4567',
-    birthDate: '01/01/2000',
-    contractType: 'CLT',
-    status: 'Ativo',
-  },
-  {
-    id: 2,
-    name: 'John Doe',
-    email: 'joao@doqr.com.br',
-    cpf: '111.222.333-44',
-    phone: '1499123-4567',
-    birthDate: '01/01/2000',
-    contractType: 'PJ',
-    status: 'Ativo',
-  },
-  {
-    id: 3,
-    name: 'John Doe',
-    email: 'joao@doqr.com.br',
-    cpf: '111.222.333-44',
-    phone: '1499123-4567',
-    birthDate: '01/01/2000',
-    contractType: 'CLT',
-    status: 'Inativo',
-  },
-];
+import { useEmployees } from '@/hooks/useEmployees';
+import { Loading } from '@/components/ui/loading';
 
 export default function EmployeesPage() {
+  const { employees, loading, error } = useEmployees();
+
   return (
     <main className="flex-1 flex">
       <div className="container mx-auto px-6 py-8 flex flex-col gap-6">
@@ -66,60 +39,68 @@ export default function EmployeesPage() {
         </div>
 
         <div className="border rounded-lg">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nome</TableHead>
-                <TableHead>E-mail</TableHead>
-                <TableHead>CPF</TableHead>
-                <TableHead>Celular</TableHead>
-                <TableHead>Data de Nascimento</TableHead>
-                <TableHead>Tipo Contratação</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Ação</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {employees.map((employee) => (
-                <TableRow key={employee.id}>
-                  <TableCell className="font-medium">{employee.name}</TableCell>
-                  <TableCell>{employee.email}</TableCell>
-                  <TableCell>{formatters.cpf(employee.cpf)}</TableCell>
-                  <TableCell>{formatters.phone(employee.phone)}</TableCell>
-                  <TableCell>{formatters.date(employee.birthDate)}</TableCell>
-                  <TableCell>{employee.contractType}</TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={
-                        employee.status === 'Ativo'
-                          ? 'secondary'
-                          : 'destructive'
-                      }
-                      className={
-                        employee.status === 'Ativo'
-                          ? 'bg-green-100 text-green-800 hover:bg-green-100'
-                          : 'bg-red-100 text-red-800 hover:bg-red-100'
-                      }
-                    >
-                      {employee.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center">
-                      <Link href={`/employees/${employee.id}/edit`}>
-                        <Button variant="ghost" size="sm">
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                      </Link>
-                      <Button variant="ghost" size="sm">
-                        <Trash className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
+          {loading ? (
+            <div className="p-8">
+              <Loading />
+            </div>
+          ) : error ? (
+            <div className="p-8 text-red-500 text-center">{error}</div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Nome</TableHead>
+                  <TableHead>E-mail</TableHead>
+                  <TableHead>CPF</TableHead>
+                  <TableHead>Celular</TableHead>
+                  <TableHead>Data de Nascimento</TableHead>
+                  <TableHead>Tipo Contratação</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Ação</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {employees.map((employee) => (
+                  <TableRow key={employee.id}>
+                    <TableCell className="font-medium">{employee.name}</TableCell>
+                    <TableCell>{employee.email}</TableCell>
+                    <TableCell>{formatters.cpf(employee.cpf)}</TableCell>
+                    <TableCell>{formatters.phone(employee.phone)}</TableCell>
+                    <TableCell>{formatters.date(employee.dateOfBith)}</TableCell>
+                    <TableCell>{employee.typeOfHiring}</TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={
+                          employee.status === true
+                            ? 'secondary'
+                            : 'destructive'
+                        }
+                        className={
+                          employee.status === true
+                            ? 'bg-green-100 text-green-800 hover:bg-green-100'
+                            : 'bg-red-100 text-red-800 hover:bg-red-100'
+                        }
+                      >
+                        {employee.status ? 'Ativo' : 'Inativo'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center">
+                        <Link href={`/employees/${employee.id}/edit`}>
+                          <Button variant="ghost" size="sm">
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                        </Link>
+                        <Button variant="ghost" size="sm">
+                          <Trash className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </div>
       </div>
     </main>
