@@ -2,12 +2,18 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { employeeService, CreateEmployeeData } from '@/lib/api';
 
-export const useCreateEmployee = () => {
+interface UseCreateEmployeeReturn {
+  createEmployee: (employeeData: CreateEmployeeData) => Promise<void>;
+  loading: boolean;
+  error: string | null;
+}
+
+export const useCreateEmployee = (): UseCreateEmployeeReturn => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const createEmployee = async (employeeData: CreateEmployeeData) => {
+  const createEmployee = async (employeeData: CreateEmployeeData): Promise<void> => {
     try {
       setLoading(true);
       setError(null);

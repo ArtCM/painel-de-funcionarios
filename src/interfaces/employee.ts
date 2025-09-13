@@ -5,6 +5,11 @@ export interface Employee {
   cpf: string;
   phone: string;
   dateOfBith: string;
+  birthDate: string;
   typeOfHiring: string;
+  contractType: string;
   status: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
+

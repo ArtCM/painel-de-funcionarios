@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -15,10 +16,44 @@ import { Edit, Trash, Plus } from 'lucide-react';
 import { formatters } from '@/lib/masks';
 import Link from 'next/link';
 import { useEmployees } from '@/hooks/useEmployees';
+import { useDeleteEmployee } from '@/hooks/useDeleteEmployee';
 import { Loading } from '@/components/ui/loading';
+import { DeleteConfirmationModal } from '@/components/ui/delete-confirmation-modal';
 
 export default function EmployeesPage() {
-  const { employees, loading, error } = useEmployees();
+  const { employees, loading, error, refetch } = useEmployees();
+  const { deleteEmployee, loading: deleteLoading } = useDeleteEmployee();
+  const [deleteModal, setDeleteModal] = useState<{
+    isOpen: boolean;
+    employeeId: number | null;
+    employeeName: string;
+  }>({
+    isOpen: false,
+    employeeId: null,
+    employeeName: '',
+  });
+
+  const handleDeleteClick = (id: number, name: string) => {
+    setDeleteModal({
+      isOpen: true,
+      employeeId: id,
+      employeeName: name,
+    });
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (deleteModal.employeeId) {
+      const success = await deleteEmployee(deleteModal.employeeId);
+      if (success) {
+        await refetch();
+        setDeleteModal({ isOpen: false, employeeId: null, employeeName: '' });
+      }
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteModal({ isOpen: false, employeeId: null, employeeName: '' });
+  };
 
   return (
     <main className="flex-1 flex">
@@ -38,14 +73,14 @@ export default function EmployeesPage() {
           </Link>
         </div>
 
-        <div className="border rounded-lg">
-          {loading ? (
-            <div className="p-8">
-              <Loading />
-            </div>
-          ) : error ? (
-            <div className="p-8 text-red-500 text-center">{error}</div>
-          ) : (
+        {loading ? (
+          <div className="border rounded-lg p-8">
+            <Loading />
+          </div>
+        ) : error ? (
+          <div className="border rounded-lg p-8 text-red-500 text-center">{error}</div>
+        ) : (
+          <div className="border rounded-lg">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -86,12 +121,16 @@ export default function EmployeesPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center">
-                        <Link href={`/employees/${employee.id}/edit`}>
+                        <Link href={`/employees/${employee.id}/edit?name=${encodeURIComponent(employee.name)}`}>
                           <Button variant="ghost" size="sm">
                             <Edit className="w-4 h-4" />
                           </Button>
                         </Link>
-                        <Button variant="ghost" size="sm">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleDeleteClick(employee.id, employee.name)}
+                        >
                           <Trash className="w-4 h-4" />
                         </Button>
                       </div>
@@ -100,8 +139,16 @@ export default function EmployeesPage() {
                 ))}
               </TableBody>
             </Table>
-          )}
-        </div>
+          </div>
+        )}
+
+        <DeleteConfirmationModal
+          isOpen={deleteModal.isOpen}
+          onClose={handleDeleteCancel}
+          onConfirm={handleDeleteConfirm}
+          employeeName={deleteModal.employeeName}
+          loading={deleteLoading}
+        />
       </div>
     </main>
   );
