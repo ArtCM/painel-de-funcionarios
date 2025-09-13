@@ -16,6 +16,16 @@ export interface CreateEmployeeData {
   status: boolean;
 }
 
+export interface UpdateEmployeeData {
+  name: string;
+  email: string;
+  cpf: string;
+  phone: string;
+  dateOfBith: string;
+  typeOfHiring: string;
+  status: boolean;
+}
+
 export const employeeService = {
   getAll: async (filters?: EmployeeFilters): Promise<Employee[]> => {
     const params = new URLSearchParams();
@@ -42,12 +52,19 @@ export const employeeService = {
     return response.data;
   },
 
+  update: async (id: number, employeeData: UpdateEmployeeData): Promise<Employee> => {
+    const response = await api.put(`/employees/${id}`, employeeData);
+    return response.data;
+  },
+
   delete: async (id: number): Promise<void> => {
     await api.delete(`/employees/${id}`);
   },
 };
 
 export default api;
+
+
 
 
 

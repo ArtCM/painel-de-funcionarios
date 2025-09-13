@@ -30,7 +30,14 @@ export const formatters = {
     }
 
     const cleanValue = value.replace(/\D/g, '');
-    return cleanValue.replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3');
+    
+    if (cleanValue.length <= 2) {
+      return cleanValue;
+    } else if (cleanValue.length <= 4) {
+      return `${cleanValue.slice(0, 2)}/${cleanValue.slice(2)}`;
+    } else {
+      return `${cleanValue.slice(0, 2)}/${cleanValue.slice(2, 4)}/${cleanValue.slice(4, 8)}`;
+    }
   },
   email: (value: string) => value,
 };
@@ -41,3 +48,4 @@ export const validators = {
   date: (value: string) => /^\d{2}\/\d{2}\/\d{4}$/.test(value),
   email: (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
 };
+
