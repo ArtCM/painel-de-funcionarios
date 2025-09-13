@@ -13,7 +13,6 @@ export const formatters = {
   phone: (value: string) => {
     if (!value) return '';
     const cleanValue = value.replace(/\D/g, '');
-    // Formato: (14) 99123-4567
     return cleanValue.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
   },
   date: (value: string) => {

@@ -1,6 +1,6 @@
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -8,41 +8,42 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Edit, Trash, Plus } from "lucide-react";
-import { formatters } from "@/lib/masks";
+} from '@/components/ui/table';
+import { Edit, Trash, Plus } from 'lucide-react';
+import { formatters } from '@/lib/masks';
+import Link from 'next/link';
 
 const employees = [
   {
     id: 1,
-    name: "John Doe",
-    email: "joedoe@doqr.com.br",
-    cpf: "11122233344",
-    phone: "1499123-4567",
-    birthDate: "01/01/2000",
-    contractType: "CLT",
-    status: "Ativo"
+    name: 'John Doe',
+    email: 'joedoe@doqr.com.br',
+    cpf: '11122233344',
+    phone: '1499123-4567',
+    birthDate: '01/01/2000',
+    contractType: 'CLT',
+    status: 'Ativo',
   },
   {
     id: 2,
-    name: "John Doe",
-    email: "joao@doqr.com.br",
-    cpf: "111.222.333-44",
-    phone: "1499123-4567",
-    birthDate: "01/01/2000",
-    contractType: "PJ",
-    status: "Ativo"
+    name: 'John Doe',
+    email: 'joao@doqr.com.br',
+    cpf: '111.222.333-44',
+    phone: '1499123-4567',
+    birthDate: '01/01/2000',
+    contractType: 'PJ',
+    status: 'Ativo',
   },
   {
     id: 3,
-    name: "John Doe",
-    email: "joao@doqr.com.br",
-    cpf: "111.222.333-44",
-    phone: "1499123-4567",
-    birthDate: "01/01/2000",
-    contractType: "CLT",
-    status: "Inativo"
-  }
+    name: 'John Doe',
+    email: 'joao@doqr.com.br',
+    cpf: '111.222.333-44',
+    phone: '1499123-4567',
+    birthDate: '01/01/2000',
+    contractType: 'CLT',
+    status: 'Inativo',
+  },
 ];
 
 export default function EmployeesPage() {
@@ -55,14 +56,13 @@ export default function EmployeesPage() {
         </div>
 
         <div className="flex justify-between items-center gap-4">
-          <Input
-            placeholder="Buscar Funcionário..."
-            className="max-w-sm"
-          />
-          <Button className="bg-primary hover:bg-primary/90">
-            <Plus className="w-4 h-4 mr-2" />
-            Novo Funcionário
-          </Button>
+          <Input placeholder="Buscar Funcionário..." className="max-w-sm" />
+          <Link href="/employees/new-employee">
+            <Button className="bg-primary hover:bg-primary/90">
+              <Plus className="w-4 h-4 mr-2" />
+              Novo Funcionário
+            </Button>
+          </Link>
         </div>
 
         <div className="border rounded-lg">
@@ -89,18 +89,28 @@ export default function EmployeesPage() {
                   <TableCell>{formatters.date(employee.birthDate)}</TableCell>
                   <TableCell>{employee.contractType}</TableCell>
                   <TableCell>
-                    <Badge 
-                      variant={employee.status === "Ativo" ? "secondary" : "destructive"}
-                      className={employee.status === "Ativo" ? "bg-green-100 text-green-800 hover:bg-green-100" : "bg-red-100 text-red-800 hover:bg-red-100"}
+                    <Badge
+                      variant={
+                        employee.status === 'Ativo'
+                          ? 'secondary'
+                          : 'destructive'
+                      }
+                      className={
+                        employee.status === 'Ativo'
+                          ? 'bg-green-100 text-green-800 hover:bg-green-100'
+                          : 'bg-red-100 text-red-800 hover:bg-red-100'
+                      }
                     >
                       {employee.status}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center">
-                      <Button variant="ghost" size="sm">
-                        <Edit className="w-4 h-4" />
-                      </Button>
+                      <Link href={`/employees/${employee.id}/edit`}>
+                        <Button variant="ghost" size="sm">
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                      </Link>
                       <Button variant="ghost" size="sm">
                         <Trash className="w-4 h-4" />
                       </Button>
