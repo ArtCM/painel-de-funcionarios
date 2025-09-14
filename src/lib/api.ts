@@ -29,8 +29,8 @@ export interface UpdateEmployeeData {
 export const employeeService = {
   getAll: async (filters?: EmployeeFilters): Promise<Employee[]> => {
     const params = new URLSearchParams();
-    if (filters?.name) {
-      params.append('name', filters.name);
+    if (filters?.search) {
+      params.append('search', filters.search);
     }
     
     const response = await api.get(`/employees?${params.toString()}`);
@@ -63,6 +63,8 @@ export const employeeService = {
 };
 
 export default api;
+
+
 
 
 

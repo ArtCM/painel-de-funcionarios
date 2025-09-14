@@ -21,7 +21,7 @@ import { Loading } from '@/components/ui/loading';
 import { DeleteConfirmationModal } from '@/components/ui/delete-confirmation-modal';
 
 export default function EmployeesPage() {
-  const { employees, loading, error, refetch } = useEmployees();
+  const { employees, loading, error, refetch, setSearchTerm } = useEmployees();
   const { deleteEmployee, loading: deleteLoading } = useDeleteEmployee();
   const [deleteModal, setDeleteModal] = useState<{
     isOpen: boolean;
@@ -55,6 +55,10 @@ export default function EmployeesPage() {
     setDeleteModal({ isOpen: false, employeeId: null, employeeName: '' });
   };
 
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+  };
+
   return (
     <main className="flex-1 flex">
       <div className="container mx-auto px-6 py-8 flex flex-col gap-6">
@@ -64,7 +68,11 @@ export default function EmployeesPage() {
         </div>
 
         <div className="flex justify-between items-center gap-4">
-          <Input placeholder="Buscar Funcionário..." className="max-w-sm" />
+          <Input 
+            placeholder="Buscar Funcionário..." 
+            className="max-w-sm"
+            onChange={(e) => handleSearch(e.target.value)}
+          />
           <Link href="/employees/new-employee">
             <Button className="bg-primary hover:bg-primary/90">
               <Plus className="w-4 h-4 mr-2" />
@@ -81,7 +89,7 @@ export default function EmployeesPage() {
           <div className="border rounded-lg p-8 text-red-500 text-center">{error}</div>
         ) : (
           <div className="border rounded-lg">
-            <Table>
+            <Table data-testid="employees-table">
               <TableHeader>
                 <TableRow>
                   <TableHead>Nome</TableHead>
@@ -96,7 +104,7 @@ export default function EmployeesPage() {
               </TableHeader>
               <TableBody>
                 {employees.map((employee) => (
-                  <TableRow key={employee.id}>
+                  <TableRow key={employee.id} data-testid="employee-row">
                     <TableCell className="font-medium">{employee.name}</TableCell>
                     <TableCell>{employee.email}</TableCell>
                     <TableCell>{formatters.cpf(employee.cpf)}</TableCell>
@@ -122,13 +130,14 @@ export default function EmployeesPage() {
                     <TableCell>
                       <div className="flex items-center">
                         <Link href={`/employees/${employee.id}/edit?name=${encodeURIComponent(employee.name)}`}>
-                          <Button variant="ghost" size="sm">
+                          <Button variant="ghost" size="sm" data-testid="edit-button">
                             <Edit className="w-4 h-4" />
                           </Button>
                         </Link>
                         <Button 
                           variant="ghost" 
                           size="sm"
+                          data-testid="delete-button"
                           onClick={() => handleDeleteClick(employee.id, employee.name)}
                         >
                           <Trash className="w-4 h-4" />
@@ -148,6 +157,7 @@ export default function EmployeesPage() {
           onConfirm={handleDeleteConfirm}
           employeeName={deleteModal.employeeName}
           loading={deleteLoading}
+          data-testid="delete-modal"
         />
       </div>
     </main>

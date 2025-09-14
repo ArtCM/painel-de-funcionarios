@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useGetEmployeeById } from '@/hooks/useGetEmployeeById';
-import { Loading } from '@/components/ui/loading';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -23,6 +22,7 @@ import { useUpdateEmployee } from '@/hooks/useUpdateEmployee';
 import { updateEmployeeSchema } from '@/lib/validations/employee';
 import { toast } from 'sonner';
 import { ZodError } from 'zod';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function EditEmployeePage() {
   const params = useParams();
@@ -133,7 +133,39 @@ export default function EditEmployeePage() {
     setDeleteModal(false);
   };
 
-  if (loading) return <Loading />;
+  if (loading) {
+    return (
+      <main className="flex-1 flex">
+        <div className="container mx-auto px-6 py-8 flex flex-col gap-6">
+          <div className="flex items-center gap-4">
+            <Skeleton className="h-8 w-20" />
+          </div>
+
+          <div>
+            <Skeleton className="h-9 w-64 mb-2" />
+            <Skeleton className="h-5 w-48" />
+          </div>
+
+          <div className="bg-white border rounded-lg p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {Array.from({ length: 7 }).map((_, index) => (
+                <div key={index} className="space-y-2">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-10 w-full" />
+                </div>
+              ))}
+            </div>
+
+            <div className="flex gap-4 mt-6">
+              <Skeleton className="h-10 w-20" />
+              <Skeleton className="h-10 w-20" />
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   if (error) return <div>Erro: {error}</div>;
   if (!employee) return <div>Funcionário não encontrado</div>;
 

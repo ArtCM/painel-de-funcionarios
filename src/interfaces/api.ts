@@ -4,5 +4,6 @@ export interface ApiError {
 }
 
 export interface EmployeeFilters {
-  name?: string;
+  search?: string;
 }
+

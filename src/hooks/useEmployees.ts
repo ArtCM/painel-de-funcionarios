@@ -1,61 +1,79 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Employee } from '@/interfaces/employee';
 import { employeeService } from '@/lib/api';
-import { EmployeeFilters } from '@/interfaces/api';
-
-let employeesCache: Employee[] | null = null;
-let lastFetchTime = 0;
-const CACHE_DURATION = 10000;
 
 interface UseEmployeesReturn {
   employees: Employee[];
   loading: boolean;
   error: string | null;
   refetch: () => Promise<void>;
+  setSearchTerm: (term: string) => void;
 }
 
-export const useEmployees = (filters?: EmployeeFilters): UseEmployeesReturn => {
-  const [employees, setEmployees] = useState<Employee[]>(employeesCache || []);
-  const [loading, setLoading] = useState(!employeesCache);
+export const useEmployees = (): UseEmployeesReturn => {
+  const [allEmployees, setAllEmployees] = useState<Employee[]>([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const hasFetchedRef = useRef(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const fetchEmployees = useCallback(async (forceRefresh = false): Promise<void> => {
-    const now = Date.now();
-    if (!forceRefresh && employeesCache && (now - lastFetchTime) < CACHE_DURATION) {
-      setEmployees(employeesCache);
-      return;
-    }
-
+  const fetchEmployees = useCallback(async (): Promise<void> => {
     try {
       setLoading(true);
       setError(null);
-      const data = await employeeService.getAll(filters);
-      setEmployees(data);
-      employeesCache = data;
-      lastFetchTime = now;
+      const data = await employeeService.getAll();
+      setAllEmployees(data);
     } catch (err) {
       setError('Erro ao carregar funcionários');
       console.error('Erro ao carregar funcionários:', err);
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  }, []);
+
+  const filteredEmployees = useMemo(() => {
+    if (!searchTerm.trim()) return allEmployees;
+    
+    const term = searchTerm.toLowerCase();
+    return allEmployees.filter(employee => 
+      employee.name.toLowerCase().includes(term) ||
+      employee.email.toLowerCase().includes(term) ||
+      employee.cpf.includes(term) ||
+      employee.phone.includes(term) ||
+      employee.dateOfBith.includes(term)
+    );
+  }, [allEmployees, searchTerm]);
 
   useEffect(() => {
-    if (!hasFetchedRef.current) {
-      fetchEmployees();
-      hasFetchedRef.current = true;
-    }
+    fetchEmployees();
   }, [fetchEmployees]);
 
   return {
-    employees,
+    employees: filteredEmployees,
     loading,
     error,
-    refetch: () => fetchEmployees(true),
+    refetch: fetchEmployees,
+    setSearchTerm,
   };
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
