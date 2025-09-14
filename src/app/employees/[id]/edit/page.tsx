@@ -254,11 +254,11 @@ export default function EditEmployeePage() {
               <div className="space-y-2">
                 <Label htmlFor="contractType">Tipo de Contratação</Label>
                 <Select 
-                  value={formData.typeOfHiring}
+                  value={formData.typeOfHiring || ''}
                   onValueChange={(value) => handleInputChange('typeOfHiring', value)}
                 >
                   <SelectTrigger className="bg-gray-50">
-                    <SelectValue />
+                    <SelectValue placeholder="Selecione o tipo" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="CLT">CLT</SelectItem>

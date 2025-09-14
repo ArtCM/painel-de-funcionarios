@@ -2,7 +2,7 @@ import { defineConfig } from 'cypress'
 
 export default defineConfig({
   e2e: {
-    baseUrl: 'http://localhost:3000',
+    baseUrl: 'https://painel-de-funcionarios.vercel.app',
     chromeWebSecurity: false,
     experimentalModifyObstructiveThirdPartyCode: true,
     setupNodeEvents() {
