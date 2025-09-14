@@ -45,6 +45,7 @@ export default function EditEmployeePage() {
 
   useEffect(() => {
     if (employee) {
+      console.log('Employee typeOfHiring:', employee.typeOfHiring); // Debug
       setFormData({
         name: employee.name || '',
         email: employee.email || '',
@@ -258,7 +259,9 @@ export default function EditEmployeePage() {
                   onValueChange={(value) => handleInputChange('typeOfHiring', value)}
                 >
                   <SelectTrigger className="bg-gray-50">
-                    <SelectValue placeholder="Selecione o tipo" />
+                    <SelectValue>
+                      {formData.typeOfHiring || "Selecione o tipo"}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="CLT">CLT</SelectItem>

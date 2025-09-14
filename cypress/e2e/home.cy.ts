@@ -3,15 +3,12 @@ describe('Home Page', () => {
     cy.clearLocalStorage();
     cy.visit('/');
     
-    // Verifica se o modal aparece
     cy.contains('Bem-vindo!').should('be.visible');
     cy.get('input[placeholder="Digite seu nome"]').should('be.visible');
     
-    // Preenche o nome e submete
     cy.get('input[placeholder="Digite seu nome"]').type('João Silva');
     cy.get('button[type="submit"]').click();
     
-    // Verifica se o nome aparece na página
     cy.contains('Bem-vindo, João Silva!').should('be.visible');
     
     // Verifica se o nome foi salvo no localStorage
