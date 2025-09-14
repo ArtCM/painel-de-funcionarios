@@ -46,13 +46,13 @@ export default function EditEmployeePage() {
   useEffect(() => {
     if (employee) {
       setFormData({
-        name: employee.name,
-        email: employee.email,
-        cpf: employee.cpf,
-        phone: employee.phone,
-        dateOfBith: formatters.date(employee.dateOfBith),
-        typeOfHiring: employee.typeOfHiring,
-        status: employee.status,
+        name: employee.name || '',
+        email: employee.email || '',
+        cpf: employee.cpf || '',
+        phone: employee.phone || '',
+        dateOfBith: formatters.date(employee.dateOfBith) || '',
+        typeOfHiring: employee.typeOfHiring || '',
+        status: employee.status ?? true,
       });
     }
   }, [employee]);
@@ -254,7 +254,7 @@ export default function EditEmployeePage() {
               <div className="space-y-2">
                 <Label htmlFor="contractType">Tipo de Contratação</Label>
                 <Select 
-                  value={formData.typeOfHiring || ''}
+                  value={formData.typeOfHiring}
                   onValueChange={(value) => handleInputChange('typeOfHiring', value)}
                 >
                   <SelectTrigger className="bg-gray-50">
