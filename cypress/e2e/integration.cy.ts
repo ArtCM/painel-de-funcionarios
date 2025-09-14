@@ -56,32 +56,48 @@ describe('Full Integration Test', () => {
     cy.get('input[placeholder*="Buscar"]')
       .clear()
       .type(testEmployee.name);
-    
+
+    // Aguarda a busca filtrar e o funcionário aparecer
     cy.wait(2000);
     cy.contains(testEmployee.name).should('be.visible');
-    
-    // 7. Edita o funcionário - força scroll e clique
-    cy.get('[data-slot="table-container"]').scrollTo('right');
-    cy.get('[data-testid="edit-button"]').first().click({ force: true });
+
+    // 7. Edita o funcionário - busca especificamente a linha do funcionário
+    cy.contains('tr', testEmployee.name).within(() => {
+      cy.get('[data-testid="edit-button"]').click({ force: true });
+    });
     cy.url().should('include', '/edit');
-    
+
     const updatedName = 'Maria Santos Editado';
     cy.get('form').within(() => {
       cy.get('input').eq(0).clear().type(updatedName);
     });
-    
+
     cy.get('button[type="submit"]').click();
-    
+
     // 8. Verifica se a edição foi salva
     cy.url().should('include', '/employees');
     cy.contains(updatedName, { timeout: 15000 }).should('be.visible');
-    
-    // 9. Deleta o funcionário - força scroll e clique
-    cy.get('[data-slot="table-container"]').scrollTo('right');
-    cy.get('[data-testid="delete-button"]').first().click({ force: true });
-    cy.get('[data-testid="confirm-delete-btn"]').first().click();
-    
-    // 10. Verifica se foi deletado
+
+    // 9. Busca novamente pelo funcionário editado antes de deletar
+    cy.get('input[placeholder*="Buscar"]')
+      .clear()
+      .type(updatedName);
+
+    cy.wait(2000);
+    cy.contains(updatedName).should('be.visible');
+
+    // 10. Deleta o funcionário - busca especificamente a linha do funcionário editado
+    cy.contains('tr', updatedName).within(() => {
+      cy.get('[data-testid="delete-button"]').click({ force: true });
+    });
+
+    // Aguarda o modal aparecer pelo título
+    cy.contains('Confirmar Exclusão', { timeout: 10000 }).should('be.visible');
+
+    // Aguarda e clica no botão Excluir pelo texto
+    cy.contains('button', 'Excluir', { timeout: 5000 }).should('be.visible').click({ force: true });
+
+    // 11. Verifica se foi deletado
     cy.wait(2000);
     cy.contains(updatedName).should('not.exist');
   });

@@ -40,6 +40,7 @@ export function DeleteConfirmationModal({
             onClick={onConfirm}
             disabled={loading}
             className="bg-red-600 hover:bg-red-700"
+            data-testid="confirm-delete-btn"
           >
             {loading ? 'Excluindo...' : 'Excluir'}
           </AlertDialogAction>
